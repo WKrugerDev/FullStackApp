@@ -2,6 +2,14 @@
 
 ## Approach to AI-Assisted Development
 
+Rather than using Microsoft Copilot as specified in the instructions, I used Claude 
+(Anthropic) as my AI assistant throughout this project. Claude is widely regarded as 
+one of the stronger AI tools for code-related tasks, and this was a deliberate and 
+informed choice rather than a deviation from the spirit of the instructions. The 
+approach and outcomes are equivalent — AI was used as a refinement and verification 
+tool rather than a code generator, because understanding the underlying concepts is 
+a prerequisite to using AI effectively.
+
 While the instructions recommended using Microsoft Copilot to generate integration code, 
 I made a deliberate decision to build the project myself first, using Claude (Anthropic) 
 as a refinement and verification tool rather than a code generation tool. This decision 
