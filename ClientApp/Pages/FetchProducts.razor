@@ -1,0 +1,66 @@
+@page "/fetchproducts"
+@* Import models and services namespaces for Product type and ProductService *@
+@using ClientApp.Models
+@using ClientApp.Services
+@* Inject ProductService for data fetching - handles API calls and caching *@
+@inject ProductService ProductService
+
+<h3>Product List</h3>
+
+@* Conditional rendering based on error and loading states *@
+<ul>
+    @* Error state - displayed if any exception is caught during data fetching *@
+    @if (isError)
+    {
+        <li>Error loading products. Please try again.</li>
+    }
+    @* Loading state - displayed while products is null (API call in progress) *@
+    else if (products == null)
+    {
+        <li>Loading...</li>
+    }
+    @* Data state - renders product list once data is successfully fetched *@
+    else
+    {
+        foreach (var product in products)
+        {
+            <li>@product.Name - $@product.Price - Stock: @product.Stock - Category: @product.Category?.Name</li>
+        }
+    }
+</ul>
+
+@code {
+    // Nullable list - null indicates loading state, empty list indicates no data returned
+    private List<Product>? products;
+
+    // Tracks error state to display appropriate message in the UI
+    private bool isError = false;
+
+    // Lifecycle method - runs once when component initialises, fetches product data
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Fetch products via service - uses cached data if already loaded
+            products = await ProductService.GetProductsAsync();
+        }
+        // Handles request timeout - typically thrown when server takes too long to respond
+        catch (TaskCanceledException)
+        {
+            Console.WriteLine("Request timed out.");
+            isError = true;
+        }
+        // Handles HTTP errors - non 2xx responses, network failures etc.
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"HTTP error: {ex.Message}");
+            isError = true;
+        }
+        // Catches any unexpected errors not covered by specific handlers above
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            isError = true;
+        }
+    }
+}
